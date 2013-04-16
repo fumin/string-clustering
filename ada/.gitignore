@@ -1,0 +1,4 @@
+obj/
+experiments/
+*.swp
+.DS_Store
