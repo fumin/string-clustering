@@ -1,4 +1,5 @@
 with Ada.Containers.Hashed_Maps;
+with Ada.Text_IO;
 
 package body String_Distance is
   function Lev_Dist (A_String : String; B_String : String) return Natural is
@@ -7,7 +8,7 @@ package body String_Distance is
                                B_String'First..(B_String'Last + 2)) of Natural;
 
     -- Matrix of the distance between each char of A_String and B_String
-    Distances : Score_Matrix := (others => (others => Max_Score));
+    Distances : Score_Matrix := (others => (others => 0));
 
     -- Last index of B_String where A_String and B_String are the same char
     Same_Char_B_Idx : Integer := 0;
@@ -26,7 +27,12 @@ package body String_Distance is
     A_Pos : Integer;
     B_Pos : Integer;
   begin
+    if 0 = A_String'Length or 0 = B_String'Length then
+      return Max_Score;
+    end if;
+
     -- Initialize Distances
+    Distances(A_String'First, B_String'First) := Max_Score;
     for I in A_String'First..(A_String'Last+1) loop
       Distances(I + 1, B_String'First+1) := I - A_String'First;
       Distances(I + 1, B_String'First) := Max_Score;
@@ -44,7 +50,11 @@ package body String_Distance is
       CharPos.Include( B_String(J), 0 );
     end loop;
 
+    A_String_Loop:
     for A_String_Idx in (A_String'First+1)..(A_String'Last+1) loop
+      Same_Char_B_Idx := 0;
+
+      B_String_Loop:
       for B_String_Idx in (B_String'First+1)..(B_String'Last+1) loop
         A_Pos := CharPos.Element( B_String(B_String_Idx-1) );
         B_Pos := Same_Char_B_Idx;
@@ -65,10 +75,11 @@ package body String_Distance is
                          (A_String_Idx - A_Pos - (A_String'First+1)) +
                          1 + (B_String_Idx - B_Pos - (B_String'First+1)) );
 
-      end loop;
+      end loop B_String_Loop;
 
       CharPos.Include( A_String(A_String_Idx-1), A_String_Idx - A_String'First );
-    end loop;
+    end loop A_String_Loop;
+
     return Distances(A_String'Last + 2, B_String'Last + 2);
 
   end Lev_Dist;
