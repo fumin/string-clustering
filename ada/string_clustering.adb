@@ -66,7 +66,7 @@ package body String_Clustering is
     Data : Str_Vector;
     Dists : Expectation_Maximization.Distance_Matrix;
 
---Testt : Natural_Vector;
+--Testt : Expectation_Maximization.Dist_Vector;
   begin
     Expectation_Maximization.Read_File_Lines( Filename => Filename, Data => Data );
     Expectation_Maximization.Read_Distance_Matrix_From_Disk(
@@ -91,10 +91,10 @@ package body String_Clustering is
 --Testt.Alloc(0);
 --
 --Ada.Text_IO.Put_Line("ASSIGNING...");
---Dists.Set(1, 1, 897); Dists.Set(1, 2, 98); Dists.Set(1, 3, 90);
---Dists.Set(2, 1, 44);  Dists.Set(2, 2, 67444); Dists.Set(2, 3, 67);
+--Dists.Set(1, 1, 97); Dists.Set(1, 2, 98); Dists.Set(1, 3, 90);
+--Dists.Set(2, 1, 44);  Dists.Set(2, 2, 41); Dists.Set(2, 3, 67);
 --
---Ada.Text_IO.Put_Line( "2, 1 = " & Integer'Image(Dists.Get(2, 1)) );
+--Ada.Text_IO.Put_Line( "2, 1 = " & Integer'Image(Integer(Dists.Get(2, 1))) );
 
   end Run;
 

@@ -15,7 +15,8 @@ package body Thread_Safe_Vector is
   procedure Initialize( V : in out Vector ) is
   begin
 --    Ada.Text_IO.Put_Line("Initialize!");
-    Alloc( V => V, L => 0 );
+    V.Content_Ptr := new Array_Of_Elements(1..0);
+    V.Size        := 0;
   end Initialize;
 
   procedure Finalize( V: in out Vector ) is
