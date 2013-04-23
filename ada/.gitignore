@@ -1,2 +1,6 @@
+main
+key_distances.txt
+*.ali
+*.o
 obj/
 experiments/
