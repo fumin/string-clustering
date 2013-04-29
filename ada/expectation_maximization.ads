@@ -46,14 +46,27 @@ package Expectation_Maximization is
   function Read_Distance_Matrix( A_Idx : in Positive;
                                  B_Idx : in Positive;
                                  Dists : in Distance_Matrix) return Distance_Type;
-  procedure Save_Distance_Matrix_To_Disk( Filename : in String;
+  procedure Dump_Distance_Matrix_To_Disk( Filename : in String;
                                           Dists    : in Distance_Matrix);
-  procedure Read_Distance_Matrix_From_Disk( Filename : in String;
+  procedure Load_Distance_Matrix_From_Disk( Filename : in String;
                                             Dists    : out Distance_Matrix);
 
   procedure E_Step( Dist_Matrix    : in Distance_Matrix;
                     Centroids      : in Positive_Vector;
-                    Classification : out Positive_Vector);
-  function M_Step( Dist_Matrix    : in Distance_Matrix;
-                   Classification : in Positive_Vector) return Positive_Vector;
+                    Classification : out Positive_Vector;
+                    Variance       : out Natural);
+  function M_Step( Classification : in Positive_Vector;
+                   K              : in Positive;
+                   Dist_Matrix    : in Distance_Matrix) return Positive_Vector;
+  procedure EM( K              : in Positive;
+                Dist_Matrix    : in Distance_Matrix;
+                Number_Of_Runs : in Positive;
+                Centroids      : out Positive_Vector;
+                Classification : out Positive_Vector;
+                Variance       : out Natural);
+  procedure Export_Results( Filename       : in String;
+                            Centroids_Strs : in Str_Vector;
+                            Classification : in Positive_Vector;
+                            Variance       : in Natural);
+
 end Expectation_Maximization;

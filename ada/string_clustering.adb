@@ -62,40 +62,52 @@ package body String_Clustering is
     return Expectation_Maximization.Distance_Type(String_Distance.Lev_Dist(A, B));
   end Lev_Dist;
 
-  procedure Run( Filename : in String; K : in Positive ) is
+  procedure Run( Filename : in String; K : in Positive; Recompute_Dist_Matrix : in Boolean ) is
     Data : Str_Vector;
     Dists : Expectation_Maximization.Distance_Matrix;
-
---Testt : Expectation_Maximization.Dist_Vector;
+    Centroids, Classification : Expectation_Maximization.Positive_Vector;
+    Variance : Natural;
   begin
     Expectation_Maximization.Read_File_Lines( Filename => Filename, Data => Data );
-    Expectation_Maximization.Read_Distance_Matrix_From_Disk(
-      Filename => "key_distances.txt", Dists => Dists );
-    --Compute_Distance_Matrix( Data => Data,
-    --                         Dists => Dists,
-    --                         Number_Of_Cores => 8,
-    --                         Metric => Lev_Dist'Access);
-    --Expectation_Maximization.Save_Distance_Matrix_To_Disk(
-    --  Filename => "key_distances.txt", Dists => Dists );
 
-    Ada.Text_IO.Put_Line("1st, 2nd: " & Integer'Image(Integer(Expectation_Maximization.Read_Distance_Matrix(1,2, Dists))));
-    Ada.Text_IO.Put_Line("Last, Last-1: " & Integer'Image(Integer(Expectation_Maximization.Read_Distance_Matrix(Data.Size-1,Data.Size,Dists))));
+    if Recompute_Dist_Matrix then
+      Compute_Distance_Matrix( Data => Data,
+                               Dists => Dists,
+                               Number_Of_Cores => 8,
+                               Metric => Lev_Dist'Access);
+      Expectation_Maximization.Dump_Distance_Matrix_To_Disk(
+        Filename => "key_distances.txt", Dists => Dists );
+    else
+      Expectation_Maximization.Load_Distance_Matrix_From_Disk(
+        Filename => "key_distances.txt", Dists => Dists );
+    end if;
 
---Dists.Alloc(2);
---Testt.Alloc(3);
---Dists.Set(1, Testt);
---
---Testt.Alloc(4);
---Dists.Set(2, Testt);
---
---Testt.Alloc(0);
---
---Ada.Text_IO.Put_Line("ASSIGNING...");
---Dists.Set(1, 1, 97); Dists.Set(1, 2, 98); Dists.Set(1, 3, 90);
---Dists.Set(2, 1, 44);  Dists.Set(2, 2, 41); Dists.Set(2, 3, 67);
---
---Ada.Text_IO.Put_Line( "2, 1 = " & Integer'Image(Integer(Dists.Get(2, 1))) );
-
+    Ada.Text_IO.Put_Line("Running K =" & Integer'Image(K));
+    Expectation_Maximization.EM( K => K,
+                                 Dist_Matrix => Dists,
+                                 Number_Of_Runs => 12,
+                                 Centroids => Centroids,
+                                 Classification => Classification,
+                                 Variance => Variance);
+    declare
+      Space_K : constant String := Integer'Image(K);
+      K_Str   : constant String := Space_K(2..Space_K'Last);
+      Out_Filename : String := "K" & K_Str & ".txt";
+      Centroids_Strs : Str_Vector;
+      Centroid_Str : Ada.Strings.Unbounded.Unbounded_String;
+    begin
+      Ada.Text_IO.Put_Line("K = " & K_Str & ", Variance =" & Integer'Image(Variance));
+      Ada.Text_IO.Put_Line("Writing results to file: " & Out_Filename);
+      Centroids_Strs.Alloc(Centroids.Size);
+      for I in 1..Centroids.Size loop
+        Centroid_Str := Data.Get(Centroids.Get(I));
+        Centroids_Strs.Set(I, Centroid_Str);
+      end loop;
+      Expectation_Maximization.Export_Results( Filename       => Out_Filename,
+                                               Centroids_Strs => Centroids_Strs,
+                                               Classification => Classification,
+                                               Variance       => Variance);
+    end;
   end Run;
 
 end String_Clustering;
