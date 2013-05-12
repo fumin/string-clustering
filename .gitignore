@@ -1,4 +1,6 @@
 keys.txt
 sampled_keys_1000_over_1.txt
 *.swp
-.DS_Store
+*.DS_Store
+
+*.dylib
