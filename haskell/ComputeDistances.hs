@@ -3,6 +3,17 @@ module ComputeDistances ((!),
                          computeDistances,
                          computeDistances1) where
 
+-- Synopsis:
+-- The goal of this module is to provide `computeDistances` which given a list of
+-- objects, and a distance definition, returns a Map of the distance between all
+-- possible pairs. For a list of length N, the returned Map would have size N(N-1)/2.
+-- 
+-- Note that we use a size 2 tuple to represent a pair of objects. In particular,
+-- we always store (a, b) in the Map if a > b. Thus, to query against the
+-- result of our `computeDistances`, we should always use our provided
+-- `ComputeDistances.!` instead of the built-in `Map.!`.
+--
+------------------------------------------------------------------------
 -- Experiment results on computing the mutual distances of 2000 strings:
 --
 -- | Implementation                          | Time spent (seconds)
