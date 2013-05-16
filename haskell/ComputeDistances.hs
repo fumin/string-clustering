@@ -77,7 +77,7 @@ list2Map a
                   P.rseq bs'
                   return $ Map.union as' bs'
   where (as,bs) = splitAt ((length a) `div` 2) a
-        granularity = 10
+        granularity = 100000
 computeDistances :: (Ord a, DS.NFData b, DS.NFData a) =>
                     (a -> a -> b) -> [a] -> Map.Map (a, a) b
 computeDistances distanceDefinition a = list2Map $ comD distanceDefinition a

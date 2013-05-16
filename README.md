@@ -8,3 +8,11 @@
   * Third option: whether to recompute the distance matrix (Boolean).
   * For example: `obj/main ../sampled_keys_1000_over_1.txt 7 n`
 * To run tests: `make test`
+
+## Haskell
+Assuming we're in the haskell folder:
+* To build the programme: `runhaskell Setup.hs configure; runhaskell Setup.hs build`
+* To run the programme: `./dist/build/string_clustering/string_clustering test_keys.txt +RTS -N8 -lf`
+* todos:
+  * EM
+  * tests

@@ -1,0 +1,14 @@
+Name: StringClustering
+Version: 0.0
+Cabal-Version: >= 1.2
+License: GPL
+Author: awaw fumin
+Build-Type: Simple
+
+Executable string_clustering
+  GHC-Options: -O2 -rtsopts -threaded -eventlog
+  Build-Depends: base, deepseq, parallel, containers, array, bytestring
+  Hs-Source-Dirs: ., string_distance
+  Main-Is: Main.hs
+  Include-Dirs: string_distance
+  C-Sources: string_distance/damerau_levenshtein.c

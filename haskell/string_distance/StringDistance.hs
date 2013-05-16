@@ -74,12 +74,13 @@ damerauLevenshtein1 a b
       M.forM_ [1..len_b] $ \j -> do
         STRef.writeSTRef i1 =<< (AST.readArray sd (Char.ord (b `LC.index` ((fromIntegral j)-1))))
         STRef.writeSTRef j1 =<< (STRef.readSTRef db)
-        if a `LC.index` (i-1) == b `LC.index` (j-1) then do
-          AST.writeArray score ((fromIntegral i)+1, (fromIntegral j)+1) =<< (AST.readArray score ((fromIntegral i), (fromIntegral j)))
-          STRef.writeSTRef db j
-        else do
-          values <- mapM (AST.readArray score) [((fromIntegral i),(fromIntegral j)), ((fromIntegral i)+1,(fromIntegral j)), ((fromIntegral i),(fromIntegral j)+1)]
-          AST.writeArray score ((fromIntegral i)+1, (fromIntegral j)+1) (1 + (minimum values))
+        if a `LC.index` (i-1) == b `LC.index` (j-1)
+          then do
+            AST.writeArray score ((fromIntegral i)+1, (fromIntegral j)+1) =<< (AST.readArray score ((fromIntegral i), (fromIntegral j)))
+            STRef.writeSTRef db j
+          else do
+            values <- mapM (AST.readArray score) [((fromIntegral i),(fromIntegral j)), ((fromIntegral i)+1,(fromIntegral j)), ((fromIntegral i),(fromIntegral j)+1)]
+            AST.writeArray score ((fromIntegral i)+1, (fromIntegral j)+1) (1 + (minimum values))
 
         i1' <- STRef.readSTRef i1
         j1' <- STRef.readSTRef j1
