@@ -29,8 +29,8 @@ main = do
   args <- getArgs
   strings <- fmap LC.lines $ LC.readFile (args !! 0)
   gen <- Random.getStdGen
-  let distanceMap  = (computeDistances strings) `seq` (computeDistances strings)
-  let sample_count = 36
+  let distanceMap  = computeDistances strings
+      sample_count = 36
       k            = 5
       state'       = EM.em_restarts sample_count k strings distanceMap gen
   putStrLn "-----------------------------"
