@@ -15,7 +15,7 @@ int safe_strlen(const char const* s, const int max) {
   return max;
 };
 
-#define MAX_LEN 128
+#define MAX_LEN 350
 #define CHAR_SET_SIZE 256 // Size of the ANSII character set
 
 // The damerau-levenshtein distance between the strings a and b.

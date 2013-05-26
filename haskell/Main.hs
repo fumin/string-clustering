@@ -30,10 +30,10 @@ main = do
   strings <- fmap LC.lines $ LC.readFile (args !! 0)
   gen <- Random.getStdGen
   let distanceMap  = computeDistances strings
-      sample_count = 36
-      k            = 5
+      k            = read (args !! 1)
+      sample_count = k * 3
       state'       = EM.em_restarts sample_count k strings distanceMap gen
   putStrLn "-----------------------------"
-  putStrLn $ "centroids: " ++ (show $ map fst (EM.classification state'))
+  putStrLn $ unlines $ map (LC.unpack . fst) (EM.classification state')
   putStrLn $ "variance: " ++ (show $ EM.variance state')
   putStrLn $ "in " ++ (show (EM.iteration state')) ++ " iterations"
