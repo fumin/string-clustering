@@ -11,8 +11,6 @@
 
 ## Haskell
 Assuming we're in the haskell folder:
-* To build the programme: `runhaskell Setup.hs configure; runhaskell Setup.hs build`
-* To run the programme: `./dist/build/string_clustering/string_clustering test_keys.txt +RTS -N8 -lf`
-* todos:
-  * EM
-  * tests
+* To build the programme: `runhaskell Setup.hs configure --user; runhaskell Setup.hs build`
+* To run the programme: `./dist/build/string_clustering/string_clustering ../sampled_500_keys.txt +RTS -N8 -lf`
+* To run tests: `runhaskell Test.hs`

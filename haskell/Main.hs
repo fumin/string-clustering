@@ -2,10 +2,12 @@
 import qualified Data.ByteString.Lazy.Char8 as LC
 import qualified Data.Map as Map
 import qualified Control.DeepSeq as DS
+import qualified System.Random as Random
 import System.Environment (getArgs)
 
 import qualified StringDistance as SD
 import qualified ComputeDistances as CD
+import qualified EM as EM
 
 damerauLevenshtein :: LC.ByteString -> LC.ByteString -> Integer
 damerauLevenshtein a b = SD.damerauLevenshtein a b
@@ -18,18 +20,6 @@ computeDistances a = CD.computeDistances damerauLevenshtein a
        Integer
 (!) distances (a, b) = distances CD.! (a, b)
 
-insert :: (LC.ByteString, LC.ByteString) ->
-          Integer ->
-          Map.Map (LC.ByteString, LC.ByteString) Integer ->
-          Map.Map (LC.ByteString, LC.ByteString) Integer
-insert (a, b) v distances = CD.insert (a, b) v distances
-
---dd =
---  Main.insert ((LC.pack "abc"), (LC.pack "cde")) 5 .
---  Main.insert ((LC.pack "abc"), (LC.pack "cq")) 4 .
---  Main.insert ((LC.pack "dfk"), (LC.pack "cde")) 50 $ Map.empty
-
--- This is EXTREMELY important, as it allows us to use P.rdeepseq
 instance DS.NFData LC.ByteString where
   rnf a
     | LC.empty == a = ()
@@ -38,9 +28,12 @@ instance DS.NFData LC.ByteString where
 main = do
   args <- getArgs
   strings <- fmap LC.lines $ LC.readFile (args !! 0)
-  let dd = computeDistances strings
-  putStrLn $ show $ Map.size dd
-  putStrLn $ show $ Map.foldr (\v sum -> v + sum) 0 dd
---  putStrLn $ show $ dd ! ((LC.pack "user:1183942:activity_feed"), (LC.pack "user:2328050:activity_feed"))
---  putStrLn $ show $ dd ! ((LC.pack "user:1183942:activity_feed"), (LC.pack "collage:4577422:liked_by"))
---  putStrLn $ show $ dd ! ((LC.pack "user:2328050:activity_feed"), (LC.pack "collage:4577422:liked_by"))
+  gen <- Random.getStdGen
+  let distanceMap  = (computeDistances strings) `seq` (computeDistances strings)
+  let sample_count = 36
+      k            = 5
+      state'       = EM.em_restarts sample_count k strings distanceMap gen
+  putStrLn "-----------------------------"
+  putStrLn $ "centroids: " ++ (show $ map fst (EM.classification state'))
+  putStrLn $ "variance: " ++ (show $ EM.variance state')
+  putStrLn $ "in " ++ (show (EM.iteration state')) ++ " iterations"

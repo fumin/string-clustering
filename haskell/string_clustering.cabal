@@ -7,7 +7,15 @@ Build-Type: Simple
 
 Executable string_clustering
   GHC-Options: -O2 -rtsopts -threaded -eventlog
-  Build-Depends: base, deepseq, parallel, containers, array, bytestring
+  Build-Depends: list-extras,
+                 MissingH,
+                 base,
+                 deepseq,
+                 parallel,
+                 containers,
+                 array,
+                 bytestring,
+                 random
   Hs-Source-Dirs: ., string_distance
   Main-Is: Main.hs
   Include-Dirs: string_distance
