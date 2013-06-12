@@ -4,6 +4,7 @@ import qualified Data.Map as Map
 import qualified Control.DeepSeq as DS
 import qualified System.Random as Random
 import System.Environment (getArgs)
+import System.Exit (exitWith, exitFailure)
 
 import qualified StringDistance as SD
 import qualified ComputeDistances as CD
@@ -25,12 +26,18 @@ instance DS.NFData LC.ByteString where
     | LC.empty == a = ()
     | otherwise = DS.rnf $ LC.fromChunks $ tail $ LC.toChunks a
 
+parseArgs args =
+  if length args /= 2
+    then do putStrLn "Usage: string_clustering filename::String k::Int"
+            exitFailure
+    else return (args !! 0, read (args !! 1))
+
 main = do
   args <- getArgs
-  strings <- fmap LC.lines $ LC.readFile (args !! 0)
+  (filename, k) <- parseArgs args
+  strings <- fmap LC.lines $ LC.readFile filename
   gen <- Random.getStdGen
   let distanceMap  = computeDistances strings
-      k            = read (args !! 1)
       sample_count = k * 3
       state'       = EM.em_restarts sample_count k strings distanceMap gen
   putStrLn "-----------------------------"

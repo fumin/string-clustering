@@ -12,5 +12,8 @@
 ## Haskell
 Assuming we're in the haskell folder:
 * To build the programme: `runhaskell Setup.hs configure --user; runhaskell Setup.hs build`
-* To run the programme: `./dist/build/string_clustering/string_clustering ../sampled_500_keys.txt +RTS -N8 -lf`
+* To run the programme:
+  * First option: path to the data file (String).
+  * Second option: number of classes (Integer).
+  * Example: `./dist/build/string_clustering/string_clustering ../sampled_500_keys.txt 5 +RTS -N8 -lf`
 * To run tests: `runhaskell Test.hs`
