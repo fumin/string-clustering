@@ -10,6 +10,10 @@ import qualified StringDistance as SD
 import qualified ComputeDistances as CD
 import qualified EM as EM
 
+import Control.Exception
+
+import qualified Debug.Trace as DT
+
 damerauLevenshtein :: LC.ByteString -> LC.ByteString -> Integer
 damerauLevenshtein a b = SD.damerauLevenshtein a b
 
@@ -26,6 +30,7 @@ instance DS.NFData LC.ByteString where
     | LC.empty == a = ()
     | otherwise = DS.rnf $ LC.fromChunks $ tail $ LC.toChunks a
 
+parseArgs :: [[Char]] -> IO ([Char], Int)
 parseArgs args =
   if length args /= 2
     then do putStrLn "Usage: string_clustering filename::String k::Int"
@@ -38,8 +43,11 @@ main = do
   strings <- fmap LC.lines $ LC.readFile filename
   gen <- Random.getStdGen
   let distanceMap  = computeDistances strings
-      sample_count = k * 3
+  evaluate distanceMap
+
+  let sample_count = k * 3
       state'       = EM.em_restarts sample_count k strings distanceMap gen
+
   putStrLn "-----------------------------"
   putStrLn $ unlines $ map (LC.unpack . fst) (EM.classification state')
   putStrLn $ "variance: " ++ (show $ EM.variance state')

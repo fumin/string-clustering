@@ -15,5 +15,6 @@ Assuming we're in the haskell folder:
 * To run the programme:
   * First option: path to the data file (String).
   * Second option: number of classes (Integer).
-  * Example: `./dist/build/string_clustering/string_clustering ../sampled_500_keys.txt 5 +RTS -N8 -lf`
+  * Example 1, redis keys: `./dist/build/string_clustering/string_clustering ../sampled_500_keys.txt 5 +RTS -N8 -lf`
+  * Example 2, citations: `for i in {2..30}; do ./dist/build/string_clustering/string_clustering ../cora-refs $i +RTS -N8; echo $i; done`
 * To run tests: `runhaskell Test.hs`

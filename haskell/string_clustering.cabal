@@ -15,7 +15,8 @@ Executable string_clustering
                  containers,
                  array,
                  bytestring,
-                 random
+                 random,
+                 monad-par
   Hs-Source-Dirs: ., string_distance
   Main-Is: Main.hs
   Include-Dirs: string_distance
